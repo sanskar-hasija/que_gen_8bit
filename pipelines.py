@@ -351,14 +351,14 @@ def pipeline(
     
     # Instantiate model if needed
     if isinstance(model, str):
-        model = AutoModelForSeq2SeqLM.from_pretrained(model, load_in_8bit=load_in_8bit)
+        model = AutoModelForSeq2SeqLM.from_pretrained(model, load_in_8bit=load_in_8bit, device_map='auto')
     
     if task == "question-generation":
         if ans_model is None:
             # load default ans model
             ans_model = targeted_task["default"]["ans_model"]
             ans_tokenizer = AutoTokenizer.from_pretrained(ans_model)
-            ans_model = AutoModelForSeq2SeqLM.from_pretrained(ans_model, load_in_8bit=load_in_8bit)
+            ans_model = AutoModelForSeq2SeqLM.from_pretrained(ans_model, load_in_8bit=load_in_8bit, device_map='auto')
         else:
             # Try to infer tokenizer from model or config name (if provided as str)
             if ans_tokenizer is None:
@@ -380,7 +380,7 @@ def pipeline(
                     ans_tokenizer = AutoTokenizer.from_pretrained(ans_tokenizer)
 
             if isinstance(ans_model, str):
-                ans_model = AutoModelForSeq2SeqLM.from_pretrained(ans_model, load_in_8bit=load_in_8bit)
+                ans_model = AutoModelForSeq2SeqLM.from_pretrained(ans_model, load_in_8bit=load_in_8bit , device_map='auto')
     
     if task == "e2e-qg":
         return task_class(model=model, tokenizer=tokenizer, use_cuda=use_cuda)
